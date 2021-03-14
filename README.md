@@ -92,7 +92,7 @@ So the commercial goal is to get as many users as long as possible to use sparki
 
 This database serves the needs of a good recommendation system: The favourite songs of user `X` can easily be extracted of our fact_table given their number_of_plays (by `X`). So we can put users in clusters based on their favourite songs. And if `X` likes the songs `a`, `b`, & `c` and there are other Users in (one of) his cluster(-s) which likes the songs `a`, `b`, `c`, & `d` he also might like song `d`. Let's recommend this song to him. He supposably enjoys that and thus enjoys sparkify.
 
-## 2. State and Justify your Database Schema Design and ETL pipeline.
+## 2. State and Justify your Database Schema Design and ETL Pipeline.
 
 ### Database Schema Design
 
@@ -103,3 +103,11 @@ The denormalized fact table `songplays` provides most information sparkify needs
 - `time`
 
 the joins are very simple -> high readability.
+
+### ETL Pipeline
+
+The ETL Pipeline is very simple,
+1. Raw data from S3 is loaded in staging tables `staging_events` and `staging_songs` in Redshift. Empty and blank entries are replace by `NULL`s and the `artist_name` is truncated after a string size of 255 bytes.
+2. Data from `staging_songs` is directly written into the dimension tables `songs` and `artists`
+3. Data from `staging_events` is directly written into the dimension tables `users` and `time`
+4. For the fact table `songplays` both `staging_events` and `staging_songs` are joined on artist name, song title, and duration. Also the staging_events are filtered by `page == 'Nextsong'` 
