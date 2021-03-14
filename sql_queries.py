@@ -136,6 +136,7 @@ staging_songs_copy = f"""
 
 # FINAL TABLES
 
+# start_time is taken from https://knowledge.udacity.com/questions/154533. Thank you Survesh C :)
 songplay_table_insert = """
     INSERT INTO songplays(
         start_time,
